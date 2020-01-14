@@ -73,20 +73,17 @@ h1 {
     border-radius: 2px;
 }
 
-.todo__list li:hover .remove__btn {
+.todo__list li:hover .btn {
     opacity: 1;
 }
 
-.remove__btn {
+.btn {
     opacity: 0;
-    position: absolute;
-    right: 5px;
-    top: 5px;
-    transition: all .1s;
-    width: 1rem;
-    height: 1rem;
     border: none;
     outline: none;
+    width: 1rem;
+    height: 1rem;
+    transition: all .1s;
     background: rgba(255,255,255,.15);
     cursor: pointer;
     display: flex;
@@ -94,8 +91,20 @@ h1 {
     justify-content: center;
     border-radius: 2px;
     font-size: 1rem;
+    line-height: 1.1em;
 }
 
-.remove__btn:hover {
+.btn:hover {
     background: rgba(255,255,255, .45);
+}
+
+.remove__btn {
+    margin-bottom: 2px;
+}
+
+.buttons {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
 }

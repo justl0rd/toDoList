@@ -118,7 +118,18 @@
         
         for (let i = 0; i < appData.length; i++) {
             if (appData[i].id === taskId) {
-                appData[i].text = prompt('Edit task', '')
+                const oldText = appData[i].text;
+                let newText;
+
+                do {
+                    newText = prompt('Edit task', '');
+                    
+                    if (newText === null) {
+                        newText = oldText;
+                    }
+                } while (newText === '')
+
+                appData[i].text = newText;
 
                 saveData();
                 createApp();

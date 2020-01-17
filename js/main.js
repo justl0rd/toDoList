@@ -1,52 +1,72 @@
 (function() {
 
+    let appData = [];
+    let sortData = [];
     const toDo = document.getElementById('todo');
-    const taskButton = document.getElementById('todo__add');
     let list = document.createElement('ul');
-    let taskItems = document.querySelectorAll('.todo__list li');
+    const taskButton = document.getElementById('todo__add');
+    const sortButton = document.getElementById('sort');
+    list.classList.add('todo__list');
 
-    let createToDo = () => {
-        list.classList.add('todo__list')
-        toDo.append(list);
-        if (localStorage.getItem('todo')) {
-            list.innerHTML = localStorage.getItem('todo');
-            refreshTaskItems();
-        }
-        
-        removeTask();
-        editTask();
-    }
-    
-    function addTask(e)  {
+    function addAppData(e) {
         e.preventDefault();
-        let taskItem = document.createElement('li');
-        let taskItemText = document.createElement('span');
-        const taskItemContent = document.getElementById('todo__content')
-        
+        const taskItemContent = document.getElementById('todo__content');
+
         if(taskItemContent.value === '') {
             alert('Your task is empty');
             taskItemContent.focus();
         } else {
-            
-            taskItemText.innerText = taskItemContent.value;
-            taskItem.append(taskItemText);
-            taskItem.append(creatButtonsWrap());
-            list.append(taskItem);
+            let date = new Date();
+
+            appData.push(
+                {
+                    text: taskItemContent.value,
+                    status: 'active',
+                    id: +date,
+                }
+            )
+
             taskItemContent.value = '';
             taskItemContent.focus();
-
-            
-
-            refreshTaskItems();
-            removeTask();
-            editNewTask(taskItem)
-            saveList();
         }
+        
+        saveData();
+        createApp();
+    }
+
+    const saveData = () => {
+        localStorage.setItem('appData', JSON.stringify(appData));
     }
     
-    const saveList = () => {
-        localStorage.setItem('todo', list.innerHTML);
+    let createToDo = (dataArr) => {
+        list.innerHTML = '';
+        toDo.append(list);
+
+        dataArr.forEach(data => {
+            let li = document.createElement('li');
+            let span = document.createElement('span');
+            li.append(span);
+            li.append(creatButtonsWrap());
+            span.innerHTML = data.text;
+            list.append(li);
+            li.id = data.id;
+            li.classList.add(data.status);
+            li.querySelector('.remove__btn').addEventListener('click', dellTask);
+            li.querySelector('.edit__btn').addEventListener('click', editTask);
+            li.querySelector('.status__btn').addEventListener('click', changeTaskStatus);
+        });
     }
+
+    const createApp = () => {
+        if (localStorage.getItem('appData')) {
+            appData = JSON.parse(localStorage.getItem('appData'));
+            createToDo(appData);
+        }
+    } 
+
+    const createSortedApp = () => {
+        createToDo(sortData);
+    } 
 
     const addRemoveButton = () => {
         const removeButton = document.createElement('button');
@@ -59,51 +79,94 @@
         const editButton = document.createElement('button');
         editButton.classList.add('btn', 'edit__btn');
         editButton.innerHTML = '&#9998;';
+
         return editButton;
     }
 
+    const taskStatusButton = () => {
+        const statusButton = document.createElement('button');
+        statusButton.classList.add('btn', 'status__btn');
+        statusButton.innerHTML = '&#10004;';
+
+        return statusButton;
+    }
+
     const creatButtonsWrap = () => {
-        let buttonsWrap = document.createElement('div');
+        const buttonsWrap = document.createElement('div');
         buttonsWrap.classList.add('buttons');
         buttonsWrap.append(addRemoveButton(), addEditButton());
+        buttonsWrap.append(taskStatusButton());
+        
         return buttonsWrap;
     }
 
-    const removeTask = () => {
-        taskItems.forEach(element => {
-            element.querySelector('.remove__btn').addEventListener('click', function() {
-                element.remove();
-                
-                saveList();
-            })
+    const dellTask = (e) => {
+        taskId = +e.target.parentElement.parentElement.id;
+
+        for (let i = 0; i < appData.length; i++) {
+            if (appData[i].id === taskId) {
+                appData.splice(i, 1);
+
+                saveData();
+                createApp();
+            }
+        }
+    }
+
+    const editTask = (e) => {
+        const taskId = +e.target.parentElement.parentElement.id;
+        
+        for (let i = 0; i < appData.length; i++) {
+            if (appData[i].id === taskId) {
+                appData[i].text = prompt('Edit task', '')
+
+                saveData();
+                createApp();
+            }
+        }
+    }
+
+    const changeTaskStatus = (e) => {
+        const taskId = +e.target.parentElement.parentElement.id;
+        const taskElement = e.target.parentElement.parentElement;
+
+        for (let i = 0; i < appData.length; i++) {
+
+            if (appData[i].id === taskId) {
+                let taskStatus = appData[i].status;
+
+                if (taskStatus === 'active') {
+                    appData[i].status = 'complete'
+                } else {
+                    appData[i].status = 'active';
+                }
+
+                saveData();
+
+                taskElement.className = "";
+                taskElement.classList.add(appData[i].status)
+            }
+        }
+    }
+
+    const sortTasks = (e) => {
+        e.preventDefault();
+        sortData = Array.from(appData);
+
+        sortData.sort(function(a, b) {
+            let textA = a.text.toLowerCase(), textB = b.text.toLowerCase();
+            if (textA < textB) return -1;
+            if (textA > textB) return 1;
+            return 0;
         });
+
+        createSortedApp();
+
     }
 
-    const editTask = () => {
-        taskItems.forEach(element => {
-            element.querySelector('.edit__btn').addEventListener('click', () => {
-                element.querySelector('li span').innerText = prompt('Edit task', '');
-                
-                saveList();
-            });
-        });
-    }
+    createApp();
 
-    const editNewTask = (e) => {
-        e.querySelector('.edit__btn').addEventListener('click', () => {
-            e.querySelector('li span').innerText = prompt('Edit task', '');
-            
-            saveList();
-        });
-    }
-
-    const refreshTaskItems = () => {
-        taskItems = document.querySelectorAll('.todo__list li');
-    }
-
-
-    createToDo();
-    
-    taskButton.addEventListener('click', addTask);
+    taskButton.addEventListener('click', addAppData);
+    sortButton.addEventListener('click', sortTasks);
 
 }());

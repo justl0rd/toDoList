@@ -1,12 +1,16 @@
 body {
     padding: 0;
     margin: 0;
-    background: #000 url(../img/bg.jpg) no-repeat center center;
-    background-size: cover;
+    background: #000 url(../img/bg.jpg) no-repeat center bottom;
+    background-size: contain;
     min-height: 100vh;
     color: #fff;
     font-family: sans-serif;
     font-size: 16px;
+}
+
+* {
+    box-sizing: border-box;
 }
 
 h1, p, span, ul, li, a, button, input {
@@ -32,10 +36,12 @@ h1 {
 }
 
 .todo__input,
-.todo__btn {
+.todo__btn,
+.todo__sort {
     padding: 1rem;
     outline: none;
-    border: none
+    border: none;
+    min-height: 50px
 }
 
 .todo__input {
@@ -65,7 +71,7 @@ h1 {
 }
 
 .todo__list li {
-    padding: .7rem 1.7rem .7rem .7rem;
+    padding: .7rem 3.7rem .7rem .7rem;
     margin-top:2px;
     display: block;
     background: rgba(255,255,255,.15);
@@ -75,6 +81,17 @@ h1 {
 
 .todo__list li:hover .btn {
     opacity: 1;
+}
+
+.todo__list li.complete span {
+    text-decoration: line-through;
+}
+.todo__list li.complete .status__btn {
+    color: #6abb50;
+}
+
+.todo__list li.complete {
+    background: rgba(255,255,255,.2);
 }
 
 .btn {
@@ -98,13 +115,38 @@ h1 {
     background: rgba(255,255,255, .45);
 }
 
-.remove__btn {
-    margin-bottom: 2px;
-}
-
 .buttons {
     position: absolute;
     right: 5px;
     top: 50%;
     transform: translateY(-50%);
+}
+
+.remove__btn {
+    margin-bottom: 2px;
+}
+
+.status__btn {
+    font-size: 1.3rem;
+    position: absolute;
+    right: calc(1rem + 4px);
+    top: 50%;
+    transform: translateY(-50%);
+    width: calc(2rem + 2px);
+    height: calc(2rem + 2px);
+}
+
+.todo__sort {
+    width: 50px;
+    height: 100%;
+    margin-left: 2px;
+    background: url(../img/sort.png) no-repeat center center;
+    background-color: rgba(255,255,255,.8);
+    object-fit: contain;
+    transition: all .3s;
+    cursor: pointer;
+}
+
+.todo__sort:hover {
+    background-color: rgba(255,255,255,1);
 }

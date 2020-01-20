@@ -12,17 +12,17 @@
         e.preventDefault();
         const taskItemContent = document.getElementById('todo__content');
 
-        if(taskItemContent.value === '') {
+        if(taskItemContent.value === '') { // if(!taskItemContent.value)
             alert('Your task is empty');
             taskItemContent.focus();
         } else {
-            let date = new Date();
+            let date = new Date(); // const
 
             appData.push(
                 {
                     text: taskItemContent.value,
                     status: 'active',
-                    id: +date,
+                    id: +date, // Number(data) or Number(Date.now())
                 }
             )
 
@@ -58,7 +58,7 @@
     }
 
     const createApp = () => {
-        if (localStorage.getItem('appData')) {
+        if (localStorage.getItem('appData')) { // good
             appData = JSON.parse(localStorage.getItem('appData'));
             createToDo(appData);
         }
@@ -101,7 +101,7 @@
     }
 
     const dellTask = (e) => {
-        taskId = +e.target.parentElement.parentElement.id;
+        taskId = +e.target.parentElement.parentElement.id; // taskId ? const?
 
         for (let i = 0; i < appData.length; i++) {
             if (appData[i].id === taskId) {
@@ -114,9 +114,9 @@
     }
 
     const editTask = (e) => {
-        const taskId = +e.target.parentElement.parentElement.id;
+        const taskId = +e.target.parentElement.parentElement.id; // Number(e.target...)
         
-        for (let i = 0; i < appData.length; i++) {
+        for (let i = 0; i < appData.length; i++) {  // appData.forEach((data, i) => {...})
             if (appData[i].id === taskId) {
                 const oldText = appData[i].text;
                 let newText;
@@ -162,11 +162,11 @@
 
     const sortTasks = (e) => {
         e.preventDefault();
-        sortData = Array.from(appData);
+        sortData = Array.from(appData); // like
 
-        sortData.sort(function(a, b) {
+        sortData.sort(function(a, b) { // (a, b) => {...}
             let textA = a.text.toLowerCase(), textB = b.text.toLowerCase();
-            if (textA < textB) return -1;
+            if (textA < textB) return -1; // return (textA < textB) ? -1 : 1;
             if (textA > textB) return 1;
             return 0;
         });

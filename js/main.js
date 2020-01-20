@@ -16,13 +16,13 @@
             alert('Your task is empty');
             taskItemContent.focus();
         } else {
-            let date = new Date();
+            const date = new Date();
 
             appData.push(
                 {
                     text: taskItemContent.value,
                     status: 'active',
-                    id: +date,
+                    id: Number(date),
                 }
             )
 
@@ -101,7 +101,7 @@
     }
 
     const dellTask = (e) => {
-        taskId = +e.target.parentElement.parentElement.id;
+        const taskId = Number(e.target.parentElement.parentElement.id);
 
         for (let i = 0; i < appData.length; i++) {
             if (appData[i].id === taskId) {
@@ -114,7 +114,7 @@
     }
 
     const editTask = (e) => {
-        const taskId = +e.target.parentElement.parentElement.id;
+        const taskId = Number(e.target.parentElement.parentElement.id);
         
         for (let i = 0; i < appData.length; i++) {
             if (appData[i].id === taskId) {
@@ -138,7 +138,7 @@
     }
 
     const changeTaskStatus = (e) => {
-        const taskId = +e.target.parentElement.parentElement.id;
+        const taskId = Number(e.target.parentElement.parentElement.id);
         const taskElement = e.target.parentElement.parentElement;
 
         for (let i = 0; i < appData.length; i++) {
@@ -164,7 +164,7 @@
         e.preventDefault();
         sortData = Array.from(appData);
 
-        sortData.sort(function(a, b) {
+        sortData.sort((a, b) => {
             let textA = a.text.toLowerCase(), textB = b.text.toLowerCase();
             if (textA < textB) return -1;
             if (textA > textB) return 1;
